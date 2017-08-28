@@ -16,7 +16,7 @@ def connect():
         # create a cursor
         cur = conn.cursor()
 
- # execute a statement
+        # execute a statement
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
 
