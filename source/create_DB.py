@@ -13,7 +13,7 @@ def create_tables():
         """DROP TABLE IF EXISTS calls CASCADE;""",
         """CREATE TABLE groups (
             group_id SERIAL PRIMARY KEY,
-            group_name VARCHAR(255) NOT NULL
+            group_name VARCHAR(255) NOT NULL UNIQUE
         );""",
         """CREATE TABLE persons (
             person_id SERIAL PRIMARY KEY,
