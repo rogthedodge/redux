@@ -16,15 +16,16 @@ class redux_model(object):
         # check the event exists then find a person in the event's group
         try:
             curr = self.conn.cursor()
-            sql = """SELECT group_id FROM events WHERE event_name = (%s);"""
+            sql = """SELECT event_id, group_id FROM events WHERE event_name = (%s);"""
             curr.execute(sql, (event_name,))
             row = curr.fetchone()
             if row:
-                # for now, just return any person in the group. We're going to need
-                # to find the next person without a row in the calls table for that
-                # event, or where the outcome on the call entry is 'engaged/no answer'
-                sql = """SELECT * FROM persons WHERE group_id = (%s);"""
-                curr.execute(sql, (row,))
+                # find the first person without a row in the calls table for that
+                # event
+                sql = """SELECT * FROM persons WHERE group_id = (%s)
+                AND NOT EXISTS (SELECT call_id FROM calls WHERE event_id = (%s)
+                AND person_id = persons.person_id)"""
+                curr.execute(sql, (row[1], row[0],))
                 row = curr.fetchone()
                 if row:
                     return {'person_name': row[2], 'person_tel': row[3]}
