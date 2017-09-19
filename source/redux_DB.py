@@ -12,14 +12,18 @@ class redux_model(object):
         # connect to the PostgreSQL server
         self.conn = psycopg2.connect(**params)
 
-    def get_person(self, event_name):
+    def get_next_call(self, event_name):
         # check the event exists then find a person in the event's group
         try:
             curr = self.conn.cursor()
-            sql = """SELECT event_id, group_id FROM events WHERE event_name = (%s);"""
+            sql = """SELECT * FROM events WHERE event_name = (%s);"""
             curr.execute(sql, (event_name,))
             row = curr.fetchone()
             if row:
+                # start to build the JSON response with event data for the call
+                # beginning with the date field because it needs unpacking
+                response = {'event_name': row[2], 'event_desc': row[3], \
+                'event_date': str(row[4]), 'event_global': row[5]}
                 # find the first person without a row in the calls table for that
                 # event
                 sql = """SELECT * FROM persons WHERE group_id = (%s)
@@ -28,7 +32,9 @@ class redux_model(object):
                 curr.execute(sql, (row[1], row[0],))
                 row = curr.fetchone()
                 if row:
-                    return {'person_name': row[2], 'person_tel': row[3]}
+                    # complete building and then return the JSON call response
+                    response.update({'person_name': row[2], 'person_tel': row[3]})
+                    return response
                 else:
                     return {'error': 'no more people to call for event'}
             else:

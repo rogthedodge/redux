@@ -1,0 +1,28 @@
+<!-- DOCTYPE HTML -->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>redux app</title>
+    <script>src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"</script>
+  </head>
+
+  <body>
+    <script>
+      //$('body').css('display', 'none');
+      $.get(" http://localhost:8000/Cuts ", function(data){
+        $( 'body' )
+        .append( '<br>' + data.person_name + '<br>' + data.person_tel + '<br><br>' )
+        .append( data.event_name + '<br>' + data.event_desc + '<br>' )
+        .append( data.event_date + '<br>' + data.event_global + '<br>' );
+        }, "json")
+    //  $('body').css('display', 'block');
+    </script>
+<!--    <div id='outcome' contenteditable='true'>
+      Record the outcome by editing this text...
+    </div>
+    <button onclick="myFunction()">Answered</button>
+    <button onclick="myFunction()">Unanswered</button>
+    <button onclick="myFunction()">Skip to next call</button>  -->
+  </body>
+
+</html>

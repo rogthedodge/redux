@@ -35,13 +35,14 @@ def create_tables():
             REFERENCES groups (group_id)
             ON UPDATE CASCADE ON DELETE CASCADE
         );"""
+        """CREATE TYPE outcome AS ENUM ('SKIP', 'UNANSWERED', 'ANSWERED');"""
         """CREATE TABLE calls (
             call_id SERIAL PRIMARY KEY,
             person_id INTEGER NOT NULL,
             event_id INTEGER NOT NULL,
-            call_outcome VARCHAR(255) NOT NULL,
-            call_notes VARCHAR(255) NOT NULL,
-            call_date TIMESTAMP,
+            call_outcome outcome NOT NULL,
+            call_notes VARCHAR(255),
+            call_date TIMESTAMP NOT NULL,
             FOREIGN KEY (person_id)
             REFERENCES persons (person_id)
             ON UPDATE CASCADE ON DELETE CASCADE,
