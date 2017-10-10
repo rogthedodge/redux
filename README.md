@@ -15,3 +15,13 @@ docker run --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:54
 
 Run the postgress CLI against the containerized DB:
 docker run -it --rm --link some-postgres:postgres postgres psql -h postgres -U postgres
+
+Currently it seems you have to go into psql and "create database redux;" whereas I'm pretty sure I read somewhere that connecting would create the DB if it doesn't already exist.
+
+Run the create_DB script. Then run the import people and import events python scripts if you need test data.
+
+Then start the web server and api:
+gunicorn redux_API:api
+
+If using the static index page, also need to start ngnix:
+sudo nginx

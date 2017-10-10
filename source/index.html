@@ -4,6 +4,28 @@
     <meta charset="UTF-8" />
     <title>redux app</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script>
+      $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+          return null;
+        }
+        else{
+          return results[1] || 0;
+        }
+      }
+    </script>
+    <script>
+      function answered() {
+        notes = document.getElementById("notes").innerHTML;
+        if (notes.includes("Record the outcome by editing this text...")) {
+          notes = " ";
+        }
+        $.post( "http://localhost:8080/call/", {person_id: person_id, event_id: event_id,
+          outcome: "ANSWERED", notes: notes, date: "2011-05-16 15:36:38"});
+        window.location.reload()
+        }
+    </script>
   </head>
 
   <body>
@@ -11,27 +33,34 @@
       .editable {
         border: 1px inset #aaa;
         height: 200px;
+        width: 1000;
         margin: 5px;
         padding: 2px;
         cursor: text;
         }
       </style>
-    <div id='call_details'></div>
-    <div id='outcome' class='editable' contenteditable='true'>
-      Record the outcome by editing this text...
-    </p>
-    </div>
-    <button onclick="myFunction()">Answered</button>
-    <button onclick="myFunction()">Unanswered</button>
-    <button onclick="myFunction()">Skip to next call</button>
+    <div id='call_details' class = non-editable></div>
     <script>
-      $.get(" http://localhost:8000/Cuts ", function(data){
-        div = document.getElementById('call_details');
-        div.innerHTML = '<br>' + data.person_name + '<br>' + data.person_tel +
-        data.event_name + '<br><br>' + data.event_desc + '<br>' +
-        data.event_date + '<br>' + data.event_global + '<br><br>';
-        }, "json")
+      var event_name = $.urlParam('event');
+      var call_url = 'http://localhost:8080/event/' + event_name;
+      var person_id, event_id, outcome, notes, date
+      $.get(call_url, function(data){
+        person_id = data.person_id;
+        event_id = data.event_id;
+        document.getElementById("call_details").innerHTML =
+        '<br>' + data.person_name + '<br>' + data.person_tel +
+        '<br><br>' + data.event_name + '<br>' + data.event_desc + '<br>' +
+        data.event_date + '<br>' + '<br><br>';
+        }, "json");
+         name;
     </script>
+    <div id='notes' class='editable' contenteditable='true'>
+          Record the outcome by editing this text...
+        </p>
+    </div>
+    <button onclick="answered()">Answered</button>
+    <input type="button" value="Unanswered" onClick="window.location.reload()">
+    <input type="button" value="Skip to next call" onClick="window.location.reload()">
   </body>
 
 </html>

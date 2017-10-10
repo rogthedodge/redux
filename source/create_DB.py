@@ -60,6 +60,8 @@ def create_tables():
         conn = psycopg2.connect(**params)
         conn.autocommit = True
         cur = conn.cursor()
+        sql = """CREATE DATABASE REDUX;"""
+        cur.execute(sql)
         # create table one by one
         for command in commands:
             cur.execute(command)
