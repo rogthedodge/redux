@@ -32,7 +32,7 @@ def import_people():
                 sql = """INSERT INTO persons (group_id, person_name, person_tel)
                 VALUES (%s, %s, %s)"""
                 cur.execute(sql, (group_id, name, tel,))
-                print name, ' ', tel, ' ', CLP
+                print (name, ' ', tel, ' ', CLP)
             cur.close()
             # commit the changes
             conn.commit()

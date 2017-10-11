@@ -1,5 +1,4 @@
 import falcon
-from falcon_cors import CORS
 import redux_DB
 import json
 

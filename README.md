@@ -24,4 +24,16 @@ Then start the web server and api:
 gunicorn redux_API:api
 
 If using the static index page, also need to start ngnix:
-sudo nginx
+sudo nginx, add the html file to the nginx html folder and update ngnix.conf to add:
+
+location /call {
+    proxy_pass http://127.0.0.1:8000/call;
+}
+
+location /event {
+    proxy_pass http://127.0.0.1:8000/event;
+}
+
+in oder to avoid cross domain JS-call issues.
+
+Have now updated code to Python 3 so all scripts need to be run using python3 command. Also all dependencies (falcon, gunicorn, json, psycopg2...) should be installed with pip3.

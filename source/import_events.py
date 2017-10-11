@@ -15,6 +15,7 @@ def import_events():
             # connect to the PostgreSQL server
             conn = psycopg2.connect(**params)
             cur = conn.cursor()
+            #import each line in the csv
             for row in reader:
                 name = row.get('Name')
                 group = row.get('Group')
@@ -33,7 +34,7 @@ def import_events():
                     event_date, event_global) VALUES (%s,%s,%s,%s,%s)"""
                     cur.execute(sql, (name, group_id, desc, date, isGlobal,))
                     #(really need to raise an exception here if the insert fails)
-                    print name, ' ', group, ' ', desc, ' ', date, ' ', globalString
+                    print (name, ' ', group, ' ', desc, ' ', date, ' ', globalString)
             cur.close()
             # commit the changes
             conn.commit()
