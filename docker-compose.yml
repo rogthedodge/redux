@@ -1,0 +1,16 @@
+version: '2'
+services:
+  postgres:
+    restart: always
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+  web:
+    build:
+      context: .
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: redux
