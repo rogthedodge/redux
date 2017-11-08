@@ -5,12 +5,14 @@ services:
     image: postgres:latest
     ports:
       - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: redux
   web:
     build:
       context: .
     depends_on:
       - postgres
-    environment:
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_USER: postgres
-      POSTGRES_DB: redux
+    stdin_open: true
+    tty: true
