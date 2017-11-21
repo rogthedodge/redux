@@ -17,5 +17,5 @@ WORKDIR /code
 
 RUN chmod +x /code/*.sh
 
-CMD ["./wait-for-it.sh", "postgres:5432", "--", "python", "source/create_DB.py"]
+#CMD ["./wait-for-it.sh", "postgres:5432", "--", "python", "source/create_DB.py"]
 #CMD ["tail", "-F", "requirements.txt"]

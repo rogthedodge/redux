@@ -16,3 +16,4 @@ services:
       - postgres
     stdin_open: true
     tty: true
+    command: bash -c "./wait-for-it.sh redux_postgres_1:5432 -t 0 -- python source/create_DB.py"
