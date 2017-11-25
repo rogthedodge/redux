@@ -1,7 +1,8 @@
 import csv
 import sys
 import psycopg2
-from config import config
+
+from source.get_config import config
 
 def import_people(csv_path):
     conn = None

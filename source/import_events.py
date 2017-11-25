@@ -1,8 +1,10 @@
 import csv
 import sys
 import psycopg2
-from config import config
 from datetime import datetime
+
+from source.get_config import config
+
 
 def import_events(csv_path):
     """

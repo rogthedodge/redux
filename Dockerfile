@@ -10,6 +10,7 @@ ADD ./requirements.txt /tmp/
 # default pip
 RUN pip install --upgrade pip
 RUN pip install --requirement /tmp/requirements.txt
+RUN pip install config configparser psycopg2 datetime falcon gunicorn httpie
 
 ADD . /code/
 
@@ -18,4 +19,5 @@ WORKDIR /code
 RUN chmod +x /code/*.sh
 
 #CMD ["./wait-for-it.sh", "postgres:5432", "--", "python", "source/create_DB.py"]
-#CMD ["tail", "-F", "requirements.txt"]
+#CMD ["./wait-for-it.sh", "postgres:5432", "--", "tail", "requirements.txt"]
+#ENTRYPOINT ["/usr/local/bin/gunicorn", "-b", ":8000", "source.redux_API:api"]

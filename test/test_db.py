@@ -1,8 +1,8 @@
 import psycopg2
 from unittest import TestCase
 
-from ..source.config import config
-from ..source.create_DB import create_tables
+from source.get_config import config
+from source.create_DB import create_tables
 
 
 class CreateDBTestCase(TestCase):
