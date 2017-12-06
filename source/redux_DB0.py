@@ -1,7 +1,7 @@
 import psycopg2
 import json
 
-from source.get_config import config
+from get_config import config
 
 class redux_model(object):
 

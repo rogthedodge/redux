@@ -9,6 +9,15 @@ services:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_USER: postgres
       POSTGRES_DB: redux
+  setup:
+    build:
+      context: .
+      dockerfile: Dockerfile-setup
+    depends_on:
+      - postgres
+    stdin_open: true
+    tty: true
+    command: bash -c "../wait-for-it.sh redux_postgres_1:5432 -t 0 -- python create_DB.py"
   web:
     build:
       context: .
@@ -18,3 +27,4 @@ services:
       - "8000:8000"
     stdin_open: true
     tty: true
+    command: bash -c "./wait-for-it.sh redux_postgres_1:5432 -t 0 -- /usr/local/bin/gunicorn -b :8000 source.redux_API:api"

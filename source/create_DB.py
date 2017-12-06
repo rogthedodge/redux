@@ -3,9 +3,9 @@ import time
 import psycopg2
 from os.path import dirname
 
-from source.get_config import config
-from source.import_events import import_events
-from source.import_people import import_people
+from get_config import config
+from import_events import import_events
+from import_people import import_people
 
 
 def create_tables():
@@ -57,7 +57,7 @@ def create_tables():
         ]
 
     # need to sleep for 5 seconds to allow postgres container to start up
-    time.sleep(5)
+    time.sleep(10)
 
     #read the connection parameters
     params = config()
@@ -78,6 +78,6 @@ def create_tables():
 
 if __name__ == '__main__':
     create_tables()
-    import_people(dirname(dirname(__file__)) + '/test/test_people.csv')
-    import_events(dirname(dirname(__file__)) + '/test/test_events.csv')
+    import_people(dirname(dirname(__file__)) + '/code/test/test_people.csv')
+    import_events(dirname(dirname(__file__)) + '/code/test/test_events.csv')
 

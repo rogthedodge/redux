@@ -3,7 +3,7 @@ import sys
 import psycopg2
 from datetime import datetime
 
-from source.get_config import config
+from get_config import config
 
 
 def import_events(csv_path):

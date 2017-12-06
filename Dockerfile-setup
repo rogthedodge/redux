@@ -14,9 +14,9 @@ RUN pip install config configparser psycopg2 datetime falcon gunicorn httpie
 
 ADD . /code/
 
-WORKDIR /code
+WORKDIR /code/source
 
-#RUN python setup.py install
+#RUN python /code/setup.py install
 RUN chmod +x /code/*.sh
 
 #CMD ["./wait-for-it.sh", "postgres:5432", "--", "python", "source/create_DB.py"]
