@@ -1,7 +1,11 @@
 #!/usr/bin/python
-
+import time
 import psycopg2
-from config import config
+from os.path import dirname
+
+from get_config import config
+from import_events import import_events
+from import_people import import_people
 
 
 def create_tables():
@@ -52,29 +56,28 @@ def create_tables():
         );"""
         ]
 
-    conn = None
-    try:
-        # read the connection parameters
-        params = config()
-        # connect to the PostgreSQL server
-        conn = psycopg2.connect(**params)
-        conn.autocommit = True
-        cur = conn.cursor()
-        sql = """CREATE DATABASE REDUX;"""
-        cur.execute(sql)
-        # create table one by one
-        for command in commands:
-            cur.execute(command)
-        # close communication with the PostgreSQL database server
-        cur.close()
-        # commit the changes
-        conn.commit()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
+    # need to sleep for 5 seconds to allow postgres container to start up
+    time.sleep(10)
+
+    #read the connection parameters
+    params = config()
+
+    # connect to the PostgreSQL server
+    conn = psycopg2.connect(**params)
+    conn.autocommit = True
+    cur = conn.cursor()
+
+    # create table one by one
+    for command in commands:
+        cur.execute(command)
+
+    # close communication with the PostgreSQL database server
+    cur.close()
+    conn.close()
 
 
 if __name__ == '__main__':
     create_tables()
+    import_people(dirname(dirname(__file__)) + '/code/test/test_people.csv')
+    import_events(dirname(dirname(__file__)) + '/code/test/test_events.csv')
+

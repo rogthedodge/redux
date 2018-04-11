@@ -1,6 +1,6 @@
 #!/usr/bin/python
 import psycopg2
-from config import config
+from get_config import config
 
 def connect():
     """ Connect to the PostgreSQL database server """
@@ -16,7 +16,7 @@ def connect():
         # create a cursor
         cur = conn.cursor()
 
- # execute a statement
+        # execute a statement
         print('PostgreSQL database version:')
         cur.execute('SELECT version()')
 

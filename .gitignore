@@ -1,0 +1,6 @@
+.idea/*
+source/__pycache__/*
+*.pyc
+build/
+dist/
+redux.egg-info/

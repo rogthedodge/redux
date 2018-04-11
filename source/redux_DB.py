@@ -1,9 +1,9 @@
 import psycopg2
-from config import config
 import json
 
-class redux_model(object):
+from source.get_config import config
 
+class redux_model(object):
     #Provides a Postgres redux data model
 
     def __init__(self):

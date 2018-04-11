@@ -1,7 +1,7 @@
 import falcon
-import redux_DB
 import json
 
+from source import redux_DB
 
 
 class EventResource(object):
