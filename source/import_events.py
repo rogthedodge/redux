@@ -62,8 +62,9 @@ def import_events(csv_path):
             #(really need to raise an exception here if the insert fails)
             print (name, ' ', group, ' ', desc, ' ', date, ' ', globalString)
 
+
     cur.close()
-    
+
     # commit the changes
     conn.commit()
 

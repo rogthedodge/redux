@@ -12,6 +12,29 @@ class redux_model(object):
         # connect to the PostgreSQL server
         self.conn = psycopg2.connect(**params)
 
+    def list_events(self, group_name):
+        # get a list of events for the group
+        try:
+            curr = self.conn.cursor()
+            sql = """SELECT group_id FROM groups WHERE group_name = (%s);"""
+            curr.execute(sql, (group_name,))
+            row = curr.fetchone()
+            if row:
+                group_id = row[0]
+                curr = self.conn.cursor()
+                sql = """SELECT * FROM events WHERE group_id = (%s);"""
+                curr.execute(sql, (group_id,))
+                response = []
+                for row in curr:
+                    response.append({'event_id': row[0],'event_name': row[2], \
+                    'event_desc': row[3],'event_date': str(row[4]), 'event_global': row[5]})
+                return response
+            else:
+             return {'error': 'no such group'}
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+
     def get_next_person_to_call(self, event_name):
         # check the event exists then find a person in the event's group
         try:
