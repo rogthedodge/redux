@@ -1,0 +1,12 @@
+config
+configparser
+psycopg2
+csvsys
+datetime
+falcon
+json
+
+
+docker run -d --name some-postgres --net redux-network -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres
+
+docker run -it --rm --net redux-network postgres psql -h some-postgres -U postgres

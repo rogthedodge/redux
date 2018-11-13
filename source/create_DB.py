@@ -15,6 +15,7 @@ def create_tables():
         """DROP TABLE IF EXISTS persons CASCADE;""",
         """DROP TABLE IF EXISTS events CASCADE;""",
         """DROP TABLE IF EXISTS calls CASCADE;""",
+        """DROP TYPE IF EXISTS outcome;""",
         """CREATE TABLE groups (
             group_id SERIAL PRIMARY KEY,
             group_name VARCHAR(255) NOT NULL UNIQUE
@@ -38,8 +39,8 @@ def create_tables():
             FOREIGN KEY (group_id)
             REFERENCES groups (group_id)
             ON UPDATE CASCADE ON DELETE CASCADE
-        );"""
-        """CREATE TYPE outcome AS ENUM ('SKIP', 'UNANSWERED', 'ANSWERED');"""
+        );""",
+        """CREATE TYPE outcome AS ENUM ('SKIP', 'UNANSWERED', 'ANSWERED');""",
         """CREATE TABLE calls (
             call_id SERIAL PRIMARY KEY,
             person_id INTEGER NOT NULL,
@@ -56,7 +57,7 @@ def create_tables():
         );"""
         ]
 
-    # need to sleep for 5 seconds to allow postgres container to start up
+    # need to sleep for a few seconds to allow postgres container to start up
     time.sleep(10)
 
     #read the connection parameters
@@ -80,4 +81,3 @@ if __name__ == '__main__':
     create_tables()
     import_people(dirname(dirname(__file__)) + '/code/test/test_people.csv')
     import_events(dirname(dirname(__file__)) + '/code/test/test_events.csv')
-

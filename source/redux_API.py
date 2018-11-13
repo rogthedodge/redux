@@ -1,7 +1,18 @@
 import falcon
 import json
-
 from source import redux_DB
+
+
+class EventsResource(object):
+
+    def on_get(self, req, resp, group):
+        #get next person for the event from the redux model
+        response = model.list_events(group)
+        if 'error' in response:
+            resp.status = falcon.HTTP_404
+        else:
+            resp.status = falcon.HTTP_200
+        resp.body = json.dumps(response)
 
 
 class EventResource(object):
@@ -16,7 +27,6 @@ class EventResource(object):
         resp.body = json.dumps(response)
 
 
-
 class CallResource(object):
 
     def on_post(self, req, resp):
@@ -27,10 +37,10 @@ class CallResource(object):
             resp.status = falcon.HTTP_201
 
 
-
 # Create the redux model and the HTTP routes and handlers,
 model = redux_DB.redux_model()
 api = falcon.API()
 api.req_options.auto_parse_form_urlencoded = True
+api.add_route('/events/{group}', EventsResource())
 api.add_route('/event/{event}', EventResource())
 api.add_route('/call', CallResource())
