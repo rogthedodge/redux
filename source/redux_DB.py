@@ -12,8 +12,9 @@ class redux_model(object):
         # connect to the PostgreSQL server
         self.conn = psycopg2.connect(**params)
 
-    def list_events(self, group_name):
-        # get a list of events for the group
+
+    def list_campaigns(self, group_name):
+        # get a list of campaigns for the group
         try:
             curr = self.conn.cursor()
             sql = """SELECT group_id FROM groups WHERE group_name = (%s);"""
@@ -22,12 +23,12 @@ class redux_model(object):
             if row:
                 group_id = row[0]
                 curr = self.conn.cursor()
-                sql = """SELECT * FROM events WHERE group_id = (%s);"""
+                sql = """SELECT * FROM campaigns WHERE group_id = (%s);"""
                 curr.execute(sql, (group_id,))
                 response = []
                 for row in curr:
-                    response.append({'event_id': row[0],'event_name': row[2], \
-                    'event_desc': row[3],'event_date': str(row[4]), 'event_global': row[5]})
+                    response.append({'campaign_id': row[0],'campaign_name': row[2], \
+                    'campaign_desc': row[3],'campaign_date': str(row[4]), 'campaign_global': row[5]})
                 return response
             else:
              return {'error': 'no such group'}
@@ -35,33 +36,33 @@ class redux_model(object):
             print(error)
 
 
-    def get_next_person_to_call(self, event_name):
-        # check the event exists then find a person in the event's group
+    def get_next_member_to_call(self, campaign_name):
+        # check the campaign exists then find a member in the campaign's group
         try:
             curr = self.conn.cursor()
-            sql = """SELECT * FROM events WHERE event_name = (%s);"""
-            curr.execute(sql, (event_name,))
+            sql = """SELECT * FROM campaigns WHERE campaign_name = (%s)"""
+            curr.execute(sql, (campaign_name,))
             row = curr.fetchone()
             if row:
-                # start to build the JSON response with event data for the call
-                response = {'event_id': row[0],'event_name': row[2], \
-                'event_desc': row[3],'event_date': str(row[4]), 'event_global': row[5]}
-                # find the first person without a row in the calls table for that
-                # event
-                sql = """SELECT * FROM persons WHERE group_id = (%s)
-                AND NOT EXISTS (SELECT call_id FROM calls WHERE event_id = (%s)
-                AND person_id = persons.person_id)"""
+                # start to build the JSON response with campaign data for the call
+                response = {'campaign_id': row[0],'campaign_name': row[2], \
+                'campaign_desc': row[3],'campaign_date': str(row[4]), 'campaign_global': row[5]}
+                # find the first member without a row in the calls table for that
+                # campaign
+                sql = """SELECT * FROM members WHERE group_id = (%s)
+                AND NOT EXISTS (SELECT call_id FROM calls WHERE campaign_id = (%s)
+                AND member_id = members.member_id)"""
                 curr.execute(sql, (row[1], row[0],))
                 row = curr.fetchone()
                 if row:
                     # complete building and then return the JSON call response
-                    response.update({'person_id': row[0],'person_name': row[2],\
-                     'person_tel': row[3]})
+                    response.update({'member_id': row[0],'member_name': row[2],\
+                     'member_tel': row[3]})
                     return response
                 else:
-                    return {'error': 'no more people to call for event'}
+                    return {'error': 'no more members to call for campaign'}
             else:
-                return {'error': 'no such event'}
+                return {'error': 'no such campaign'}
             curr.close()
             self.conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
@@ -70,9 +71,9 @@ class redux_model(object):
     def record_call_details (self, call_details):
         try:
             curr = self.conn.cursor()
-            sql = """INSERT INTO calls (person_id, event_id, call_outcome,
+            sql = """INSERT INTO calls (member_id, campaign_id, call_outcome,
                 call_notes, call_date) VALUES (%s, %s, %s, %s, %s);"""
-            curr.execute(sql, (call_details['person_id'], call_details['event_id'],\
+            curr.execute(sql, (call_details['member_id'], call_details['campaign_id'],\
                 call_details['outcome'],call_details['notes'],\
                 call_details['date']),)
             curr.close()

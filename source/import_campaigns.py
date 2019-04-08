@@ -6,9 +6,9 @@ from datetime import datetime
 from get_config import config
 
 
-def import_events(csv_path):
+def import_campaigns(csv_path):
     """
-    Import event from CSV into database
+    Import campaign from CSV into database
     :param csv_path |str: path to CSV
     :return: None
     """
@@ -56,8 +56,8 @@ def import_events(csv_path):
                 group_id = cur.fetchone()[0]
 
             #now insert the person row using the CSV row data plus the group_id
-            sql = """INSERT INTO events (event_name, group_id, event_desc,
-            event_date, event_global) VALUES (%s,%s,%s,%s,%s)"""
+            sql = """INSERT INTO campaigns (campaign_name, group_id, campaign_desc,
+            campaign_date, campaign_global) VALUES (%s,%s,%s,%s,%s)"""
             cur.execute(sql, (name, group_id, desc, date, isGlobal,))
             #(really need to raise an exception here if the insert fails)
             print (name, ' ', group, ' ', desc, ' ', date, ' ', globalString)
@@ -69,4 +69,4 @@ def import_events(csv_path):
     conn.commit()
 
 if __name__ == '__main__':
-    import_events()
+    import_campaigns()

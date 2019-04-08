@@ -4,38 +4,38 @@ import psycopg2
 from os.path import dirname
 
 from get_config import config
-from import_events import import_events
-from import_people import import_people
+from import_campaigns import import_campaigns
+from import_members import import_members
 
 
 def create_tables():
     """ create tables in the PostgreSQL database"""
     commands = [
         """DROP TABLE IF EXISTS groups CASCADE;""",
-        """DROP TABLE IF EXISTS persons CASCADE;""",
-        """DROP TABLE IF EXISTS events CASCADE;""",
+        """DROP TABLE IF EXISTS members CASCADE;""",
+        """DROP TABLE IF EXISTS campaigns CASCADE;""",
         """DROP TABLE IF EXISTS calls CASCADE;""",
         """DROP TYPE IF EXISTS outcome;""",
         """CREATE TABLE groups (
             group_id SERIAL PRIMARY KEY,
             group_name VARCHAR(255) NOT NULL UNIQUE
         );""",
-        """CREATE TABLE persons (
-            person_id SERIAL PRIMARY KEY,
+        """CREATE TABLE members (
+            member_id SERIAL PRIMARY KEY,
             group_id INTEGER NOT NULL,
-            person_name VARCHAR(255) NOT NULL,
-            person_tel VARCHAR(30),
+            member_name VARCHAR(255) NOT NULL,
+            member_tel VARCHAR(30),
             FOREIGN KEY (group_id)
             REFERENCES groups (group_id)
             ON UPDATE CASCADE ON DELETE CASCADE
         );""",
-        """CREATE TABLE events (
-            event_id SERIAL PRIMARY KEY,
+        """CREATE TABLE campaigns (
+            campaign_id SERIAL PRIMARY KEY,
             group_id INTEGER NOT NULL,
-            event_name VARCHAR(255) NOT NULL,
-            event_desc VARCHAR(255) NOT NULL,
-            event_date TIMESTAMP,
-            event_global BOOLEAN,
+            campaign_name VARCHAR(255) NOT NULL,
+            campaign_desc VARCHAR(255) NOT NULL,
+            campaign_date TIMESTAMP,
+            campaign_global BOOLEAN,
             FOREIGN KEY (group_id)
             REFERENCES groups (group_id)
             ON UPDATE CASCADE ON DELETE CASCADE
@@ -43,16 +43,16 @@ def create_tables():
         """CREATE TYPE outcome AS ENUM ('SKIP', 'UNANSWERED', 'ANSWERED');""",
         """CREATE TABLE calls (
             call_id SERIAL PRIMARY KEY,
-            person_id INTEGER NOT NULL,
-            event_id INTEGER NOT NULL,
+            member_id INTEGER NOT NULL,
+            campaign_id INTEGER NOT NULL,
             call_outcome outcome NOT NULL,
             call_notes VARCHAR(255),
             call_date TIMESTAMP NOT NULL,
-            FOREIGN KEY (person_id)
-            REFERENCES persons (person_id)
+            FOREIGN KEY (member_id)
+            REFERENCES members (member_id)
             ON UPDATE CASCADE ON DELETE CASCADE,
-            FOREIGN KEY (event_id)
-            REFERENCES events (event_id)
+            FOREIGN KEY (campaign_id)
+            REFERENCES campaigns (campaign_id)
             ON UPDATE CASCADE ON DELETE CASCADE
         );"""
         ]
@@ -79,5 +79,5 @@ def create_tables():
 
 if __name__ == '__main__':
     create_tables()
-    import_people(dirname(dirname(__file__)) + '/code/test/test_people.csv')
-    import_events(dirname(dirname(__file__)) + '/code/test/test_events.csv')
+    import_members(dirname(dirname(__file__)) + '/code/test/test_members.csv')
+    import_campaigns(dirname(dirname(__file__)) + '/code/test/test_campaigns.csv')

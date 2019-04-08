@@ -1,4 +1,4 @@
-FROM python:3.5
+FROM python:3.7
 
 # update apt get and get tools
 RUN apt-get update && apt-get install -y nano \
@@ -21,4 +21,4 @@ RUN chmod +x /code/*.sh
 
 #CMD ["./wait-for-it.sh", "postgres:5432", "--", "python", "source/create_DB.py"]
 #CMD ["./wait-for-it.sh", "postgres:5432", "--", "tail", "requirements.txt"]
-#ENTRYPOINT ["/usr/local/bin/gunicorn", "-b", ":8000", "source.redux_API:api"]
+#ENTRYPOINT ["/usr/local/bin/gunicorn", "-b", ":80", "source.redux_API:api"]

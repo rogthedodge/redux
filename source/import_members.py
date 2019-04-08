@@ -4,7 +4,7 @@ import psycopg2
 
 from get_config import config
 
-def import_people(csv_path):
+def import_members(csv_path):
     conn = None
     CSVFile = open(csv_path, 'rt')
     reader = csv.DictReader(CSVFile)
@@ -33,7 +33,7 @@ def import_people(csv_path):
         #(really need to raise an exception here if no valid group ID is returned)
 
         #now create a person row in the database using the CSV row data and the group_id
-        sql = """INSERT INTO persons (group_id, person_name, person_tel)
+        sql = """INSERT INTO members (group_id, member_name, member_tel)
                  VALUES (%s, %s, %s);"""
         cur.execute(sql, (group_id, name, tel,))
         print (name, ' ', tel, ' ', CLP)

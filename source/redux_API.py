@@ -3,11 +3,11 @@ import json
 from source import redux_DB
 
 
-class EventsResource(object):
+class CampaignResource(object):
 
-    def on_get(self, req, resp, group):
-        #get next person for the event from the redux model
-        response = model.list_events(group)
+    def on_get(self, req, resp, group_name):
+        #get active campaigns for the group from the redux model
+        response = model.list_campaigns(group_name)
         if 'error' in response:
             resp.status = falcon.HTTP_404
         else:
@@ -15,11 +15,11 @@ class EventsResource(object):
         resp.body = json.dumps(response)
 
 
-class EventResource(object):
+class MemberResource(object):
 
-    def on_get(self, req, resp, event):
-        #get next person for the event from the redux model
-        response = model.get_next_person_to_call(event)
+    def on_get(self, req, resp, campaign_name):
+        #get next member for the campaign from the redux model
+        response = model.get_next_member_to_call(campaign_name)
         if 'error' in response:
             resp.status = falcon.HTTP_404
         else:
@@ -31,7 +31,7 @@ class CallResource(object):
 
     def on_post(self, req, resp):
         #check parameters and create a new Call object in the redux model
-        if 'person_id' in req.params and 'event_id' in req.params and 'outcome'\
+        if 'member_id' in req.params and 'campaign_id' in req.params and 'outcome'\
         in req.params and 'notes' in req.params and 'date' in req.params:
             model.record_call_details(req.params)
             resp.status = falcon.HTTP_201
@@ -41,6 +41,6 @@ class CallResource(object):
 model = redux_DB.redux_model()
 api = falcon.API()
 api.req_options.auto_parse_form_urlencoded = True
-api.add_route('/events/{group}', EventsResource())
-api.add_route('/event/{event}', EventResource())
-api.add_route('/call', CallResource())
+api.add_route('/campaigns/{group_name}', CampaignResource())
+api.add_route('/call-member/{campaign_name}', MemberResource())
+api.add_route('/record-call', CallResource())

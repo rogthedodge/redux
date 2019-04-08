@@ -21,7 +21,7 @@
         if (notes.includes("Record the outcome by editing this text...")) {
           notes = " ";
         }
-        $.post( "http://localhost:8080/call/", {person_id: person_id, event_id: event_id,
+        $.post( "http://localhost:8080/call/", {person_id: person_id, campaign_id: campaign_id,
           outcome: "ANSWERED", notes: notes, date: "2011-05-16 15:36:38"});
         window.location.reload()
         }
@@ -41,16 +41,16 @@
       </style>
     <div id='call_details' class = non-editable></div>
     <script>
-      var event_name = $.urlParam('event');
-      var call_url = 'http://localhost:8080/event/' + event_name;
-      var person_id, event_id, outcome, notes, date
+      var campaign_name = $.urlParam('campaign');
+      var call_url = 'http://localhost:8080/call-member/' + campaign_name;
+      var member_id, campaign_id, outcome, notes, date
       $.get(call_url, function(data){
-        person_id = data.person_id;
-        event_id = data.event_id;
+        member_id = data.member_id;
+        campaign_id = data.campaign_id;
         document.getElementById("call_details").innerHTML =
-        '<br>' + data.person_name + '<br>' + data.person_tel +
-        '<br><br>' + data.event_name + '<br>' + data.event_desc + '<br>' +
-        data.event_date + '<br>' + '<br><br>';
+        '<br>' + data.member_name + '<br>' + data.member_tel +
+        '<br><br>' + data.campaign_name + '<br>' + data.campaign_desc + '<br>' +
+        data.campaign_date + '<br>' + '<br><br>';
         }, "json");
          name;
     </script>
