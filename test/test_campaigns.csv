@@ -1,6 +1,6 @@
-Name,Group,Description,Date,Global
-Redland Library Meeting,Bristol West,blath blah,12/10/2017,N
-Cuts,Bristol South,blather dither,31/12/2017,Y
-Council By-Election,Kingswood,burple blister,1/11/2017,N
-Councillor Panel,Kingswood,bing bong,1/11/2017,N
-Council By-Election2,Kingswood,burple blister,1/11/2017,Y
+Name,Group,Description,Start Date,End Date,Global
+Redland Library Meeting,Bristol West,blath blah,12/10/2018,31/12/2019,N
+Cuts,Bristol South,Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.,31/12/2018,30/06/2019,Y
+Council By-Election,Kingswood,xxxLorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.,1/11/2018,31/12/2019,N
+Councillor Panel,Kingswood,Blah blah blah blah,1/11/2018,31/12/2019,N
+Council By-Election2,Kingswood,Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.,1/11/2018,31/12/2019,Y

@@ -34,7 +34,8 @@ def create_tables():
             group_id INTEGER NOT NULL,
             campaign_name VARCHAR(255) NOT NULL,
             campaign_desc VARCHAR(255) NOT NULL,
-            campaign_date TIMESTAMP,
+            campaign_start_date TIMESTAMP,
+            campaign_end_date TIMESTAMP,
             campaign_global BOOLEAN,
             FOREIGN KEY (group_id)
             REFERENCES groups (group_id)

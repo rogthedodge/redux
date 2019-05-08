@@ -3,3 +3,4 @@ psycopg2==2.7.3.1
 python-mimeparse==1.6.0
 six==1.10.0
 nose2==0.7.2
+falcon-cors==1.1.7

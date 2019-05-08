@@ -1,5 +1,6 @@
 import psycopg2
 import json
+from datetime import date
 
 from source.get_config import config
 
@@ -17,21 +18,25 @@ class redux_model(object):
         # get a list of campaigns for the group
         try:
             curr = self.conn.cursor()
+            # find the Group ID from the group name
             sql = """SELECT group_id FROM groups WHERE group_name = (%s);"""
             curr.execute(sql, (group_name,))
             row = curr.fetchone()
+            response = []
             if row:
                 group_id = row[0]
                 curr = self.conn.cursor()
-                sql = """SELECT * FROM campaigns WHERE group_id = (%s);"""
-                curr.execute(sql, (group_id,))
-                response = []
+                # get a list of active campaigns for the group ID
+                today = str(date.today())
+                sql = """SELECT * FROM campaigns WHERE group_id = (%s) and \
+                campaign_start_date < (%s) and campaign_end_date > (%s);"""
+                curr.execute(sql, (group_id, today, today))
                 for row in curr:
                     response.append({'campaign_id': row[0],'campaign_name': row[2], \
-                    'campaign_desc': row[3],'campaign_date': str(row[4]), 'campaign_global': row[5]})
-                return response
-            else:
-             return {'error': 'no such group'}
+                    'campaign_desc': row[3],'campaign_start_date': str(row[5]), \
+                     'campaign_end_date': str(row[5]), 'campaign_global': row[6]})
+            # return the list of campaigns or an empty list if there aren't any that match
+            return response
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
@@ -46,7 +51,8 @@ class redux_model(object):
             if row:
                 # start to build the JSON response with campaign data for the call
                 response = {'campaign_id': row[0],'campaign_name': row[2], \
-                'campaign_desc': row[3],'campaign_date': str(row[4]), 'campaign_global': row[5]}
+                'campaign_desc': row[3],'campaign_start_date': str(row[4]),\
+                'campaign_end_date': str(row[5]),'campaign_global': row[6]}
                 # find the first member without a row in the calls table for that
                 # campaign
                 sql = """SELECT * FROM members WHERE group_id = (%s)
@@ -60,9 +66,9 @@ class redux_model(object):
                      'member_tel': row[3]})
                     return response
                 else:
-                    return {'error': 'no more members to call for campaign'}
+                    return []
             else:
-                return {'error': 'no such campaign'}
+                return []
             curr.close()
             self.conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:

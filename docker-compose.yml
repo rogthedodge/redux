@@ -1,31 +1,37 @@
-version: '2'
+version: '2.1'
 services:
   postgres:
-    container_name: redux_postgres_1
     restart: always
     image: postgres:latest
     ports:
-      - 5432:5432
+      - 5432
     environment:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_USER: postgres
       POSTGRES_DB: redux
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-U", "postgres"]
+      interval: 1s
+      timeout: 30s
+      retries: 30
   setup:
     build:
       context: .
       dockerfile: Dockerfile-setup
-    depends_on:
-      - postgres
     stdin_open: true
     tty: true
-    command: bash -c "../wait-for-it.sh redux_postgres_1:5432 -t 5 -- python create_DB.py"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: "python create_DB.py"
   web:
-     build:
-       context: .
-     depends_on:
-       - postgres
-     ports:
-       - "8000:8000"
-     stdin_open: true
-     tty: true
-     command: bash -c "./wait-for-it.sh redux_postgres_1:5432 -t 5 -- /usr/local/bin/gunicorn -b :8000 source.redux_API:api"
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: "/usr/local/bin/gunicorn -b :8000 source.redux_API:api"
