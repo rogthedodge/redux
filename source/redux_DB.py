@@ -41,7 +41,7 @@ class redux_model(object):
             print(error)
 
 
-    def get_next_member_to_call(self, campaign_name):
+    def get_next_member_to_call(self, campaign_name, prev_id):
         # check the campaign exists then find a member in the campaign's group
         try:
             curr = self.conn.cursor()
@@ -56,9 +56,10 @@ class redux_model(object):
                 # find the first member without a row in the calls table for that
                 # campaign
                 sql = """SELECT * FROM members WHERE group_id = (%s)
+                AND member_id > (%s)
                 AND NOT EXISTS (SELECT call_id FROM calls WHERE campaign_id = (%s)
-                AND member_id = members.member_id)"""
-                curr.execute(sql, (row[1], row[0],))
+                AND member_id = members.member_id AND call_outcome = 'ANSWERED')"""
+                curr.execute(sql, (row[1], prev_id, row[0],))
                 row = curr.fetchone()
                 if row:
                     # complete building and then return the JSON call response

@@ -6,6 +6,7 @@ from os.path import dirname
 from get_config import config
 from import_campaigns import import_campaigns
 from import_members import import_members
+from import_users import import_users
 
 
 def create_tables():
@@ -15,6 +16,7 @@ def create_tables():
         """DROP TABLE IF EXISTS members CASCADE;""",
         """DROP TABLE IF EXISTS campaigns CASCADE;""",
         """DROP TABLE IF EXISTS calls CASCADE;""",
+        """DROP TABLE IF EXISTS users CASCADE;""",
         """DROP TYPE IF EXISTS outcome;""",
         """CREATE TABLE groups (
             group_id SERIAL PRIMARY KEY,
@@ -41,7 +43,7 @@ def create_tables():
             REFERENCES groups (group_id)
             ON UPDATE CASCADE ON DELETE CASCADE
         );""",
-        """CREATE TYPE outcome AS ENUM ('SKIP', 'UNANSWERED', 'ANSWERED');""",
+        """CREATE TYPE outcome AS ENUM ('SKIPPED', 'UNANSWERED', 'ANSWERED');""",
         """CREATE TABLE calls (
             call_id SERIAL PRIMARY KEY,
             member_id INTEGER NOT NULL,
@@ -55,6 +57,11 @@ def create_tables():
             FOREIGN KEY (campaign_id)
             REFERENCES campaigns (campaign_id)
             ON UPDATE CASCADE ON DELETE CASCADE
+        );""",
+        """CREATE TABLE users (
+            user_id SERIAL PRIMARY KEY,
+            user_email VARCHAR(255),
+            user_CLP VARCHAR(255)
         );"""
         ]
 
@@ -82,3 +89,4 @@ if __name__ == '__main__':
     create_tables()
     import_members(dirname(dirname(__file__)) + '/code/test/test_members.csv')
     import_campaigns(dirname(dirname(__file__)) + '/code/test/test_campaigns.csv')
+    import_users(dirname(dirname(__file__)) + '/code/test/test_users.csv')
