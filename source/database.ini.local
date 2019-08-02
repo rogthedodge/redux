@@ -1,6 +1,6 @@
 [postgresql]
 user=postgres
 password=mysecretpassword
-host=redux-fargate_postgres_1
+host=redux_postgres_1
 port=5432
 database=redux

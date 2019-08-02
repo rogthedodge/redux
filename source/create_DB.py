@@ -72,6 +72,7 @@ def create_tables():
     params = config()
 
     # connect to the PostgreSQL server
+    print(params)
     conn = psycopg2.connect(**params)
     conn.autocommit = True
     cur = conn.cursor()
@@ -87,6 +88,6 @@ def create_tables():
 
 if __name__ == '__main__':
     create_tables()
-    import_members(dirname(dirname(__file__)) + '/code/test/test_members.csv')
-    import_campaigns(dirname(dirname(__file__)) + '/code/test/test_campaigns.csv')
-    import_users(dirname(dirname(__file__)) + '/code/test/test_users.csv')
+    import_members(dirname(dirname(__file__)) + '../test/test_members.csv')
+    import_campaigns(dirname(dirname(__file__)) + '../test/test_campaigns.csv')
+    import_users(dirname(dirname(__file__)) + '../test/test_users.csv')

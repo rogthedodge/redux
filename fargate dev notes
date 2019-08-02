@@ -1,0 +1,31 @@
+aws iam --region us-west-2 create-role --role-name ecsTaskExecutionRole --assume-role-policy-document file://task-execution-assume-role.json
+
+
+
+VPC created: vpc-0776133ee8a2647e9
+Subnet created: subnet-056dc28d4c9c84c10
+Subnet created: subnet-0b63ee360d4311287
+
+aws ec2 create-security-group --group-name "redux-sg" --description "Redux security group" --vpc-id "vpc-09ed12aa5eaa33610"
+
+VPC created: vpc-09ed12aa5eaa33610
+Subnet created: subnet-0bc6ea5d2820d29b0
+Subnet created: subnet-0e20ea60420e98c3a
+
+
+ecs-cli compose --project-name redux service up --create-log-groups --cluster-config redux-config
+
+
+ecs-cli compose --project-name redux service ps --cluster-config redux-config
+
+ecs-cli compose --project-name redux service down --cluster-config redux-config
+
+ecs-cli down --force --cluster-config redux-config
+
+aws rds create-db-instance --db-instance-identifier redux-instance --db-name redux --allocated-storage 20 --db-instance-class db.t2.micro --engine postgres --master-username postgres --master-user-password mysecretpassword
+
+aws ec2 create-default-subnet --availability-zone us-west-2
+
+psql "dbname=redux host=redux-instance.cesg58llipkf.eu-west-2.rds.amazonaws.com user=postgres password=mysecretpassword port=5432"
+
+psql -h redux-instance.cesg58llipkf.eu-west-2.rds.amazonaws.com -p 5432 --username postgres -d postgres

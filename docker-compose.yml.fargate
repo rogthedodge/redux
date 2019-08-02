@@ -1,0 +1,22 @@
+version: '3'
+services:
+  setup:
+    image: 739920914733.dkr.ecr.eu-west-2.amazonaws.com/redux_setup:latest
+    command: "python create_DB.py"
+    logging:
+        driver: awslogs
+        options:
+          awslogs-group: redux-logs
+          awslogs-region: eu-west-2
+          awslogs-stream-prefix: redux-
+  web:
+    image: 739920914733.dkr.ecr.eu-west-2.amazonaws.com/redux_web:latest
+    ports:
+      - "8000:8000"
+    command: "/usr/local/bin/gunicorn -b :8000 source.redux_API:api -t 1000"
+    logging:
+        driver: awslogs
+        options:
+          awslogs-group: redux-logs
+          awslogs-region: eu-west-2
+          awslogs-stream-prefix: redux-

@@ -87,3 +87,20 @@ class redux_model(object):
             self.conn.commit()
         except (Exception, psycopg2.DatabaseError) as error:
             print (error)
+
+    def get_user(self, user_email):
+        # get user data or return empty
+        try:
+            curr = self.conn.cursor()
+            sql = """SELECT * FROM users WHERE user_email = (%s)"""
+            curr.execute(sql, (user_email,))
+            row = curr.fetchone()
+            if row:
+                # start to build the JSON response with campaign data for the call
+                response = {'user_email': row[1], 'user_CLP': row[2]}
+                return response
+            else:
+                return []
+            curr.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
